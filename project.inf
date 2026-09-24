@@ -1,0 +1,20 @@
+Name: setup.feature-monit
+Requires: \
+	
+
+Provides: \
+	standard/setup.feature-monit \
+	\
+	image-install:exec-update-before:host/install/common-monit.install.txt \
+	image-install:exec-update-after:host/install/common-monit.restart.txt \
+	\
+	image-install:context-variable:OS_PACKAGES:insert:monit \
+	\
+	image-prepare:sync-source-files:*:data/monit:monit \
+	image-install:deploy-sync-files:monit:/usr/local/ndci-files/monit \
+	\
+
+Keywords: \
+	deploy.monit \
+
+Includes: 

@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# enables daemon, includes configs from /usr/local/etc/monitrc-*
+myx.common install/monit
+
+
+cat > /usr/local/etc/.ndci-monit-env <<- EOF
+	SLACK_TOKEN="${SLACK_TOKEN:-}"
+	SLACK_TOKEN_AGIT="${SLACK_TOKEN_AGIT:-}"
+	SLACK_TOPIC="${SLACK_TOPIC:-cloud-infra}"
+	SLACK_ALERT="${SLACK_ALERT:-event-alert}"
+	SLACK_AUDIT="${SLACK_AUDIT:-event-audit}"
+	SLACK_TRACK="${SLACK_TRACK:-event-track}"
+	SLACK_DEBUG="${SLACK_DEBUG:-event-debug}"
+EOF
+chown root:wheel /usr/local/etc/.ndci-monit-env
+chmod 444 /usr/local/etc/.ndci-monit-env
+
+
+MONIT_PATH="${NDCI_FILES_PATH}/monit"
+MONIT_SCRIPTS_PATH="${MONIT_PATH}/scripts"
+
+if [ -d "${MONIT_PATH}" ]; then
+	find "${MONIT_PATH}" -maxdepth 1 -name 'monitrc-*.conf' -type f -print0 | xargs -0 -I'{}' -- cp '{}' /usr/local/etc/
+	chown root:wheel /usr/local/etc/monitrc*
+	chmod 400 /usr/local/etc/monitrc*
+	if [ -d "${MONIT_SCRIPTS_PATH}" ]; then
+		echo "contracts:monit: 🔁 syncing files..." >&2
+		mkdir -p /usr/local/etc/ndci-monit-scripts
+		rsync -rltOoDi --delete --exclude=README.md "${MONIT_SCRIPTS_PATH}/" "/usr/local/etc/ndci-monit-scripts/"
+		chown root:wheel /usr/local/etc/ndci-monit-scripts/*
+		chmod 500 /usr/local/etc/ndci-monit-scripts/*
+	fi
+fi
