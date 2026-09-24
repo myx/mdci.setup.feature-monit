@@ -4,7 +4,7 @@
 myx.common install/monit
 
 
-cat > /usr/local/etc/.ndci-monit-env <<- EOF
+cat > /usr/local/etc/.mdci-monit-env <<- EOF
 	SLACK_TOKEN="${SLACK_TOKEN:-}"
 	SLACK_TOKEN_AGIT="${SLACK_TOKEN_AGIT:-}"
 	SLACK_TOPIC="${SLACK_TOPIC:-cloud-infra}"
@@ -13,11 +13,11 @@ cat > /usr/local/etc/.ndci-monit-env <<- EOF
 	SLACK_TRACK="${SLACK_TRACK:-event-track}"
 	SLACK_DEBUG="${SLACK_DEBUG:-event-debug}"
 EOF
-chown root:wheel /usr/local/etc/.ndci-monit-env
-chmod 444 /usr/local/etc/.ndci-monit-env
+chown root:wheel /usr/local/etc/.mdci-monit-env
+chmod 444 /usr/local/etc/.mdci-monit-env
 
 
-MONIT_PATH="${NDCI_FILES_PATH}/monit"
+MONIT_PATH="${MDCI_FILES_PATH}/monit"
 MONIT_SCRIPTS_PATH="${MONIT_PATH}/scripts"
 
 if [ -d "${MONIT_PATH}" ]; then
@@ -26,9 +26,9 @@ if [ -d "${MONIT_PATH}" ]; then
 	chmod 400 /usr/local/etc/monitrc*
 	if [ -d "${MONIT_SCRIPTS_PATH}" ]; then
 		echo "contracts:monit: 🔁 syncing files..." >&2
-		mkdir -p /usr/local/etc/ndci-monit-scripts
-		rsync -rltOoDi --delete --exclude=README.md "${MONIT_SCRIPTS_PATH}/" "/usr/local/etc/ndci-monit-scripts/"
-		chown root:wheel /usr/local/etc/ndci-monit-scripts/*
-		chmod 500 /usr/local/etc/ndci-monit-scripts/*
+		mkdir -p /usr/local/etc/mdci-monit-scripts
+		rsync -rltOoDi --delete --exclude=README.md "${MONIT_SCRIPTS_PATH}/" "/usr/local/etc/mdci-monit-scripts/"
+		chown root:wheel /usr/local/etc/mdci-monit-scripts/*
+		chmod 500 /usr/local/etc/mdci-monit-scripts/*
 	fi
 fi

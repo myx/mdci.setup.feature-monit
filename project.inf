@@ -11,7 +11,7 @@ Provides: \
 	image-install:context-variable:OS_PACKAGES:insert:monit \
 	\
 	image-prepare:sync-source-files:*:data/monit:monit \
-	image-install:deploy-sync-files:monit:/usr/local/ndci-files/monit \
+	image-install:deploy-sync-files:monit:/usr/local/mdci-files/monit \
 	\
 
 Keywords: \
